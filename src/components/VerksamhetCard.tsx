@@ -1,4 +1,7 @@
-import { Link, useNavigate } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import CardGallery from './CardGallery';
 import { useCollection } from '../store/collection';
 import type { Verksamhet } from '../data/types';
@@ -13,7 +16,7 @@ function Pin() {
 
 export default function VerksamhetCard({ v }: { v: Verksamhet }) {
   const { isSaved, toggleSaved, isCompared, toggleCompare } = useCollection();
-  const navigate = useNavigate();
+  const router = useRouter();
   const saved = isSaved(v.slug);
   const compared = isCompared(v.slug);
 
@@ -21,7 +24,7 @@ export default function VerksamhetCard({ v }: { v: Verksamhet }) {
     <article className="vcard">
       <div
         className="vcard__media"
-        onClick={() => navigate(`/verksamhet/${v.slug}`)}
+        onClick={() => router.push(`/verksamhet/${v.slug}`)}
         role="link"
         aria-label={`Öppna ${v.namn}`}
       >
@@ -44,7 +47,7 @@ export default function VerksamhetCard({ v }: { v: Verksamhet }) {
           <span className="vcard__cat">Daglig verksamhet</span>
           <span className="vcard__loc"><Pin />{v.omrade}</span>
         </div>
-        <h3><Link className="vcard__title" to={`/verksamhet/${v.slug}`}>{v.namn}</Link></h3>
+        <h3><Link className="vcard__title" href={`/verksamhet/${v.slug}`}>{v.namn}</Link></h3>
         <p className="vcard__desc">{v.kort}</p>
         <div className="vcard__tags">
           {v.inriktningTaggar.map((t) => <span key={t} className="tagpill">{t}</span>)}
@@ -62,7 +65,7 @@ export default function VerksamhetCard({ v }: { v: Verksamhet }) {
               <><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" aria-hidden="true"><path d="M4 7h9M4 12h16M4 17h11" /><path d="M17 4v6l3-3M17 20v-6l3 3" /></svg> Jämför</>
             )}
           </button>
-          <Link className="vcard__more" to={`/verksamhet/${v.slug}`}>Läs mer →</Link>
+          <Link className="vcard__more" href={`/verksamhet/${v.slug}`}>Läs mer →</Link>
         </div>
       </div>
     </article>

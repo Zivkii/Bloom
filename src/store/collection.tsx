@@ -1,4 +1,6 @@
-import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
+'use client';
+
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
 
 export const MAX_COMPARE = 3;
 
@@ -25,11 +27,19 @@ function load(key: string): string[] {
 }
 
 export function CollectionProvider({ children }: { children: ReactNode }) {
-  const [saved, setSaved] = useState<string[]>(() => load('bloom-saved'));
-  const [compare, setCompare] = useState<string[]>(() => load('bloom-compare'));
+  // Starta tomt (SSR-säkert), läs in sparat efter mount → ingen hydration-mismatch.
+  const [saved, setSaved] = useState<string[]>([]);
+  const [compare, setCompare] = useState<string[]>([]);
+  const ready = useRef(false);
 
-  useEffect(() => { localStorage.setItem('bloom-saved', JSON.stringify(saved)); }, [saved]);
-  useEffect(() => { localStorage.setItem('bloom-compare', JSON.stringify(compare)); }, [compare]);
+  useEffect(() => {
+    setSaved(load('bloom-saved'));
+    setCompare(load('bloom-compare'));
+    ready.current = true;
+  }, []);
+
+  useEffect(() => { if (ready.current) localStorage.setItem('bloom-saved', JSON.stringify(saved)); }, [saved]);
+  useEffect(() => { if (ready.current) localStorage.setItem('bloom-compare', JSON.stringify(compare)); }, [compare]);
 
   const toggleSaved = useCallback((slug: string) => {
     setSaved((p) => (p.includes(slug) ? p.filter((x) => x !== slug) : [...p, slug]));

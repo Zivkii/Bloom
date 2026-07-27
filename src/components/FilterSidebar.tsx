@@ -1,3 +1,5 @@
+'use client';
+
 import { useState, type ReactNode } from 'react';
 import { VERKSAMHETSTYPER, INRIKTNINGAR, MILJOER, STORLEKAR } from '../data/verksamheter';
 

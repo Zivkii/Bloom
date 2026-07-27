@@ -1,14 +1,16 @@
-import { useMemo, useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+'use client';
+
+import { useMemo, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import VerksamhetCard from '../components/VerksamhetCard';
 import MapExplorer from '../components/Map';
 import FilterSidebar, { TOM_FILTER, type Filters } from '../components/FilterSidebar';
 import { verksamheter } from '../data/verksamheter';
 import { useReveal } from '../hooks/useReveal';
 
-export default function Sok() {
+export default function SokView() {
   useReveal();
-  const [params] = useSearchParams();
+  const params = useSearchParams();
   const [filters, setFilters] = useState<Filters>({
     ...TOM_FILTER,
     sok: params.get('plats') ?? '',
@@ -36,8 +38,6 @@ export default function Sok() {
     filters.miljo.length +
     (filters.storlek ? 1 : 0) +
     (filters.typ !== 'daglig' ? 1 : 0);
-
-  useEffect(() => { document.title = 'Hitta verksamhet · Bloomly'; }, []);
 
   return (
     <main className="band band--tight">

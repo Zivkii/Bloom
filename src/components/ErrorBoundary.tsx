@@ -1,3 +1,5 @@
+'use client';
+
 import { Component, type ReactNode } from 'react';
 
 /** Fångar renderings-/effektfel (t.ex. om kartan inte kan initieras). */

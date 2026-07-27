@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import BrandMark from './BrandMark';
 
 export default function Footer() {
@@ -7,7 +7,7 @@ export default function Footer() {
       <div className="wrap">
         <div className="foot__grid">
           <div>
-            <Link className="brand" to="/" aria-label="Bloomly – startsida">
+            <Link className="brand" href="/" aria-label="Bloomly – startsida">
               <BrandMark />
               <span>Bloomly</span>
             </Link>
@@ -18,17 +18,17 @@ export default function Footer() {
           <div>
             <h4>Utforska</h4>
             <ul>
-              <li><Link to="/sok">Daglig verksamhet</Link></li>
+              <li><Link href="/sok">Daglig verksamhet</Link></li>
               <li><a href="#">Gruppbostad <span style={{ color: 'var(--ink-2)' }}>(snart)</span></a></li>
               <li><a href="#">Servicebostad <span style={{ color: 'var(--ink-2)' }}>(snart)</span></a></li>
               <li><a href="#">Korttidsboende <span style={{ color: 'var(--ink-2)' }}>(snart)</span></a></li>
-              <li><Link to="/#guider">Guider för familjer</Link></li>
+              <li><Link href="/#guider">Guider för familjer</Link></li>
             </ul>
           </div>
           <div>
             <h4>Om Bloomly</h4>
             <ul>
-              <li><Link to="/#sa-fungerar">Så fungerar det</Link></li>
+              <li><Link href="/#sa-fungerar">Så fungerar det</Link></li>
               <li><a href="#">Vår vision</a></li>
               <li><a href="#">Kontakt</a></li>
             </ul>

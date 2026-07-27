@@ -1,10 +1,12 @@
+'use client';
+
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import { kategoriEtiketter, snabbfilter, STADSDELAR } from '../data/verksamheter';
 import type { Kategori } from '../data/types';
 
 export default function SearchBar({ hero = false }: { hero?: boolean }) {
-  const navigate = useNavigate();
+  const router = useRouter();
   const [plats, setPlats] = useState('');
   const [inriktning, setInriktning] = useState('');
   const [aktiva, setAktiva] = useState<string[]>([]);
@@ -19,7 +21,7 @@ export default function SearchBar({ hero = false }: { hero?: boolean }) {
     if (plats) p.set('plats', plats);
     if (inriktning) p.set('inriktning', inriktning);
     if (aktiva.length) p.set('taggar', aktiva.join(','));
-    navigate('/sok' + (p.toString() ? '?' + p.toString() : ''));
+    router.push('/sok' + (p.toString() ? '?' + p.toString() : ''));
   }
 
   return (

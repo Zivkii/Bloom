@@ -1,12 +1,13 @@
-import { Link, useParams } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import Illustration from '../components/Illustration';
 import MapExplorer from '../components/Map';
 import ListenButton from '../components/ListenButton';
 import ContactCard from '../components/ContactCard';
-import { getBySlug } from '../data/verksamheter';
 import { useCollection } from '../store/collection';
 import { useReveal } from '../hooks/useReveal';
-import type { Narpunkt } from '../data/types';
+import type { Narpunkt, Verksamhet } from '../data/types';
 
 function AmenityIcon({ label }: { label: string }) {
   const l = label.toLowerCase();
@@ -42,23 +43,9 @@ const TYP_LABEL: Record<Narpunkt['typ'], string> = {
   butik: 'Butik',
 };
 
-export default function VerksamhetProfil() {
+export default function ProfilView({ v }: { v: Verksamhet }) {
   useReveal();
-  const { slug = '' } = useParams();
-  const v = getBySlug(slug);
   const { isSaved, toggleSaved, isCompared, toggleCompare } = useCollection();
-
-  if (!v) {
-    return (
-      <main className="band">
-        <div className="wrap">
-          <h1 style={{ fontSize: 'var(--step-2)' }}>Verksamheten kunde inte hittas</h1>
-          <p style={{ color: 'var(--ink-2)', marginTop: '.6rem' }}>Den kan ha flyttats eller tagits bort.</p>
-          <Link className="btn" to="/sok" style={{ marginTop: '1.2rem' }}>Tillbaka till sökningen</Link>
-        </div>
-      </main>
-    );
-  }
 
   const saved = isSaved(v.slug);
   const compared = isCompared(v.slug);
@@ -69,7 +56,7 @@ export default function VerksamhetProfil() {
   return (
     <main className="band band--tight">
       <div className="wrap">
-        <Link className="back" to="/sok">← Tillbaka till sökningen</Link>
+        <Link className="back" href="/sok">← Tillbaka till sökningen</Link>
 
         {/* GALLERI */}
         <div className="pgallery2 reveal">

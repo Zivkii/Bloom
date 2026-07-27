@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import Illustration from '../components/Illustration';
 import { verksamheter } from '../data/verksamheter';
 import { useCollection } from '../store/collection';
@@ -17,7 +19,7 @@ const ROWS: Row[] = [
   { label: 'Närmaste hållplats', text: (v) => v.hallplats },
 ];
 
-export default function Jamfor() {
+export default function JamforView() {
   useReveal();
   const { compare, removeCompare, clearCompare } = useCollection();
   const items = verksamheter.filter((v) => compare.includes(v.slug));
@@ -45,7 +47,7 @@ export default function Jamfor() {
             </div>
             <h2>Inget att jämföra ännu</h2>
             <p>Välj upp till tre verksamheter med “Jämför” så visas de här sida vid sida.</p>
-            <Link className="btn" to="/sok">Utforska verksamheter</Link>
+            <Link className="btn" href="/sok">Utforska verksamheter</Link>
           </div>
         ) : (
           <>
@@ -58,7 +60,7 @@ export default function Jamfor() {
                       <th key={v.slug} scope="col" className="cmp2__head">
                         <button className="cmp2__remove" type="button" onClick={() => removeCompare(v.slug)} aria-label={`Ta bort ${v.namn}`}>×</button>
                         <Illustration name={v.scene} className="cmp2__thumb grain" />
-                        <Link className="cmp2__name" to={`/verksamhet/${v.slug}`}>{v.namn}</Link>
+                        <Link className="cmp2__name" href={`/verksamhet/${v.slug}`}>{v.namn}</Link>
                         <span className="cmp2__area">{v.omrade}</span>
                       </th>
                     ))}
@@ -82,7 +84,7 @@ export default function Jamfor() {
                   <tr className="cmp2__ctarow">
                     <th scope="row"><span className="visually-hidden">Åtgärd</span></th>
                     {items.map((v) => (
-                      <td key={v.slug}><Link className="btn btn--soft" to={`/verksamhet/${v.slug}`}>Visa verksamhet</Link></td>
+                      <td key={v.slug}><Link className="btn btn--soft" href={`/verksamhet/${v.slug}`}>Visa verksamhet</Link></td>
                     ))}
                   </tr>
                 </tbody>
@@ -90,7 +92,7 @@ export default function Jamfor() {
             </div>
 
             {items.length < 3 && (
-              <Link className="cmp2__add" to="/sok">
+              <Link className="cmp2__add" href="/sok">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
                 Lägg till fler verksamheter att jämföra
               </Link>

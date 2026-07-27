@@ -1,5 +1,20 @@
+'use client';
+
+import dynamic from 'next/dynamic';
 import ErrorBoundary from './ErrorBoundary';
-import MapExplorer, { type MapExplorerProps } from './MapExplorer';
+import type { MapExplorerProps } from './MapExplorer';
+
+// MapLibre är webbläsar-/WebGL-beroende → ladda enbart på klienten (ingen SSR).
+const MapExplorer = dynamic(() => import('./MapExplorer'), {
+  ssr: false,
+  loading: () => (
+    <div className="mapstage map-fallback">
+      <div>
+        <strong>Laddar karta…</strong>
+      </div>
+    </div>
+  ),
+});
 
 /** MapExplorer inbäddad i en felgräns — kartfel blankar aldrig hela sidan. */
 export default function Map(props: MapExplorerProps) {

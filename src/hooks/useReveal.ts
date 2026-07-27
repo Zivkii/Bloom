@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect } from 'react';
 
 /** Lägger till klassen "in" på .reveal-element när de scrollas in. */

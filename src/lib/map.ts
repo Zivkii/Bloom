@@ -1,7 +1,7 @@
 // MapTiler-konfiguration. Nyckeln läses från .env (VITE_MAPTILER_KEY).
 // I produktion: begränsa nyckeln till er domän i MapTiler-kontot (Allowed origins).
 
-export const MAPTILER_KEY = (import.meta.env.VITE_MAPTILER_KEY as string | undefined) ?? '';
+export const MAPTILER_KEY = (process.env.NEXT_PUBLIC_MAPTILER_KEY as string | undefined) ?? '';
 
 export const MAP_STYLES = {
   karta: `https://api.maptiler.com/maps/streets-v2/style.json?key=${MAPTILER_KEY}`,

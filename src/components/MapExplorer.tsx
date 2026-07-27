@@ -1,6 +1,9 @@
+'use client';
+
 import { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import * as maplibregl from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 import { MAP_STYLES, STOCKHOLM_CENTER, type MapMode } from '../lib/map';
 import { sceneSVG } from '../data/scenes';
 import type { Verksamhet } from '../data/types';
@@ -64,7 +67,7 @@ export default function MapExplorer({
   const popupRef = useRef<maplibregl.Popup | null>(null);
   const loadedRef = useRef(false);
   const [mode, setMode] = useState<MapMode>('karta');
-  const navigate = useNavigate();
+  const router = useRouter();
 
   // keep latest callback without re-initialising the map
   const cbRef = useRef(onMarkerClick);
@@ -95,11 +98,11 @@ export default function MapExplorer({
           cbRef.current?.(v.slug);
           map.easeTo({ center: [v.lng, v.lat], offset: [0, 70], duration: 400 });
           const card = popup.getElement()?.querySelector<HTMLElement>('.pop2');
-          if (card) { card.style.cursor = 'pointer'; card.onclick = () => navigate('/verksamhet/' + v.slug); }
+          if (card) { card.style.cursor = 'pointer'; card.onclick = () => router.push('/verksamhet/' + v.slug); }
         });
         marker.setPopup(popup);
       } else if (markerMode === 'navigate') {
-        el.addEventListener('click', () => navigate('/verksamhet/' + v.slug));
+        el.addEventListener('click', () => router.push('/verksamhet/' + v.slug));
       } else {
         el.style.cursor = 'default';
       }

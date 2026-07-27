@@ -1,3 +1,5 @@
+'use client';
+
 import { useState } from 'react';
 
 /** Läser upp given text på svenska via webbläsarens talsyntes. */

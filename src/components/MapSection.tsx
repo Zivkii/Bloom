@@ -1,5 +1,7 @@
+'use client';
+
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useRouter } from 'next/navigation';
 import MapExplorer from './Map';
 import Illustration from './Illustration';
 import { verksamheter } from '../data/verksamheter';
@@ -7,7 +9,7 @@ import { verksamheter } from '../data/verksamheter';
 /** Hemsidans kartsektion: lista till vänster, riktig MapTiler-karta till höger. */
 export default function MapSection() {
   const [active, setActive] = useState<string | null>(null);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   return (
     <section className="band" id="karta">
@@ -26,7 +28,7 @@ export default function MapSection() {
                 key={v.slug}
                 className={'maplist__item' + (active === v.slug ? ' is-active' : '')}
                 type="button"
-                onClick={() => navigate(`/verksamhet/${v.slug}`)}
+                onClick={() => router.push(`/verksamhet/${v.slug}`)}
                 onMouseEnter={() => setActive(v.slug)}
                 onMouseLeave={() => setActive(null)}
               >

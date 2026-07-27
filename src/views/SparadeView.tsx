@@ -1,10 +1,12 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import VerksamhetCard from '../components/VerksamhetCard';
 import { verksamheter } from '../data/verksamheter';
 import { useCollection } from '../store/collection';
 import { useReveal } from '../hooks/useReveal';
 
-export default function Sparade() {
+export default function SparadeView() {
   useReveal();
   const { saved } = useCollection();
   const items = verksamheter.filter((v) => saved.includes(v.slug));
@@ -25,7 +27,7 @@ export default function Sparade() {
             </div>
             <h2>Inga sparade ännu</h2>
             <p>Tryck på hjärtat på en verksamhet för att spara den här.</p>
-            <Link className="btn" to="/sok">Utforska verksamheter</Link>
+            <Link className="btn" href="/sok">Utforska verksamheter</Link>
           </div>
         ) : (
           <div className="vcards reveal">

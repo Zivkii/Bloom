@@ -1,66 +1,68 @@
-# Bloom — Projekt Milan
+# Bloomly
 
 En digital plattform, *"Hemnet för LSS"*, där deltagare och familjer kan söka,
-jämföra och välja daglig verksamhet. Byggd tillgänglig från grunden (WCAG 2.2 AA),
-med start i Stockholm.
+jämföra och välja daglig verksamhet (och snart gruppbostad, servicebostad och
+korttidsboende). Tillgänglig från grunden (WCAG 2.2 AA), med start i Stockholm.
+
+Byggd med **Next.js (App Router)** + React + TypeScript, redo att deployas på **Vercel**.
 
 ## Kom igång
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173
-npm run build      # produktionsbygge till dist/
-npm run preview    # förhandsvisa bygget
+npm run dev        # http://localhost:3000
+npm run build      # produktionsbygge (statisk generering av alla sidor)
+npm run start      # kör produktionsbygget lokalt
+npm run typecheck  # tsc --noEmit
 ```
 
-## MapTiler-nyckel
+## Miljövariabler
 
-Kartan använder MapTiler. Nyckeln läses från `.env`:
+Kartan använder MapTiler. Nyckeln läses från `.env.local`:
 
 ```
-VITE_MAPTILER_KEY=din_nyckel
+NEXT_PUBLIC_MAPTILER_KEY=din_nyckel
+# valfritt (används för sitemap, canonical, Open Graph):
+NEXT_PUBLIC_SITE_URL=https://din-domän.se
 ```
 
-`.env` är git-ignorerad. En mall finns i `.env.example`.
+`.env.local` är git-ignorerad. En mall finns i `.env.example`.
 
-> **Innan lansering:** begränsa nyckeln i MapTiler-kontot under
-> *Account → Keys → Allowed origins* till er domän. En frontend-nyckel är
-> alltid synlig i webbläsaren — origin-begränsning är det som skyddar den.
+> **På Vercel:** lägg till `NEXT_PUBLIC_MAPTILER_KEY` (och gärna `NEXT_PUBLIC_SITE_URL`)
+> under *Project → Settings → Environment Variables*. Begränsa MapTiler-nyckeln till
+> er domän i MapTiler-kontot (*Allowed origins*) innan lansering — en frontend-nyckel
+> är alltid synlig i webbläsaren.
 
-## Byta ut platshållardata mot riktiga verksamheter
+## SEO & discoverability
 
-All verksamhetsdata bor på **ett** ställe: `src/data/verksamheter.ts`.
-Resten av appen läser bara typen `Verksamhet` (se `src/data/types.ts`), så inget
-annat behöver ändras när riktig data kommer.
-
-När Excel-filen finns:
-
-1. Exportera raderna till JSON.
-2. Mappa varje rad till `Verksamhet`. Obligatoriskt för kartan:
-   `lng` och `lat` måste vara riktiga WGS84-koordinater.
-3. Ersätt arrayen `verksamheter` i `src/data/verksamheter.ts`
-   (eller läs in från `public/verksamheter.json` om ni hellre vill det).
-
-Fältet `scene` väljer vilken lugn illustration som visas (se
-`src/data/scenes.ts`). När ni senare har riktiga foton byter vi ut
-`Illustration`-komponenten mot bildkomponenter — datamodellen är redan förberedd.
+- Varje verksamhet har en **egen, statiskt genererad sida** (`/verksamhet/[slug]`)
+  med egen `<title>`, meta-description och Open Graph-taggar (`generateStaticParams`
+  + `generateMetadata`).
+- `app/sitemap.ts` genererar `/sitemap.xml` med alla verksamheter.
+- `app/robots.ts` genererar `/robots.txt` (indexerar allt utom `/sparade` och `/jamfor`).
+- Innehållet server-renderas → syns direkt för Google och vid delning.
 
 ## Struktur
 
 ```
 src/
-  data/         verksamheter.ts (data) · types.ts · scenes.ts (illustrationer)
-  lib/          map.ts (MapTiler-stilar + centrum)
-  hooks/        useTheme · useReveal
-  components/   Header, Footer, Hero, SearchBar, Steps, VerksamhetCard,
-                MapExplorer (MapTiler), MapSection, Insights, CTA, ...
-  pages/        Home · Sok (sök + karta) · VerksamhetProfil
+  app/                Next App Router
+    layout.tsx        rot-layout: metadata, typsnitt, Header/Footer, providers
+    page.tsx          startsida
+    sok/              sök & filtrera
+    verksamhet/[slug] verksamhetsprofil (SSG + generateMetadata)
+    sparade/ jamfor/  favoriter / jämförelse
+    sitemap.ts robots.ts icon.svg globals.css
+  views/              klientvyer (Home/Sok/Profil/Sparade/Jamfor)
+  components/         Header, Footer, Hero, MapExplorer (MapTiler), kort, ...
+  data/               verksamheter.ts (data) · types.ts · scenes.ts (illustrationer)
+  lib/                map.ts (MapTiler-stilar)
+  hooks/ store/       useTheme/useReveal · collection (spara/jämför, localStorage)
 ```
 
-## Routes
+## Byta ut platshållardata mot riktiga verksamheter
 
-- `/` — startsida (hero, sök, steg, utvalda, karta, tillgänglighet, guider)
-- `/sok` — sök & filtrera med lista + karta sida vid sida
-- `/verksamhet/:slug` — verksamhetsprofil ("En vanlig dag", fakta, karta)
-
-Del av **Projekt Milan**.
+All verksamhetsdata bor på **ett** ställe: `src/data/verksamheter.ts`, typad av
+`src/data/types.ts`. När Excel-filen finns: mappa varje rad till `Verksamhet`
+(obligatoriskt: riktiga `lng`/`lat` för kartan) och ersätt arrayen. Sidorna,
+sitemap och SEO-metadata uppdateras automatiskt vid nästa bygge.

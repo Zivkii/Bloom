@@ -1,12 +1,18 @@
+'use client';
+
 import { useCallback, useEffect, useState } from 'react';
 
 type Theme = 'light' | 'dark';
 
-/** Ljust/mörkt läge — respekterar OS-inställning tills användaren väljer. */
+/** Ljust/mörkt läge — respekterar OS-inställning tills användaren väljer.
+ *  Läser sparat val efter mount (SSR-säkert, ingen hydration-mismatch). */
 export function useTheme() {
-  const [theme, setTheme] = useState<Theme | null>(
-    () => (localStorage.getItem('bloom-theme') as Theme | null),
-  );
+  const [theme, setTheme] = useState<Theme | null>(null);
+
+  useEffect(() => {
+    const saved = localStorage.getItem('bloom-theme') as Theme | null;
+    if (saved) setTheme(saved);
+  }, []);
 
   useEffect(() => {
     const root = document.documentElement;

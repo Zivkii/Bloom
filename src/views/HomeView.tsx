@@ -1,4 +1,6 @@
-import { Link } from 'react-router-dom';
+'use client';
+
+import Link from 'next/link';
 import Hero from '../components/Hero';
 import Steps from '../components/Steps';
 import VerksamhetCard from '../components/VerksamhetCard';
@@ -8,7 +10,7 @@ import CTA from '../components/CTA';
 import { verksamheter } from '../data/verksamheter';
 import { useReveal } from '../hooks/useReveal';
 
-export default function Home() {
+export default function HomeView() {
   useReveal();
   const featured = verksamheter.slice(0, 6);
 
@@ -25,7 +27,7 @@ export default function Home() {
               <h2 style={{ marginTop: '1rem' }}>Platser i Stockholm att bli nyfiken på.</h2>
             </div>
             <div className="sec-head__aside">
-              <Link className="btn btn--ghost" to="/sok">Visa alla {verksamheter.length} →</Link>
+              <Link className="btn btn--ghost" href="/sok">Visa alla {verksamheter.length} →</Link>
             </div>
           </div>
           <div className="cards reveal">
